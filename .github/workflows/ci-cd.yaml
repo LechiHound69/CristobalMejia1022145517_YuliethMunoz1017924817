@@ -48,7 +48,7 @@ jobs:
       - name: Subir reporte de cobertura como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report-${{ github.ref_name }}
+          name: coverage-report-${{ github.run_number }}
           path: coverage.xml
 
       # Descomenta este bloque si conectas el repo a SonarCloud
@@ -103,5 +103,5 @@ jobs:
         with:
           tag_name: v1.0.${{ github.run_number }}
           name: "Madriguera Market v1.0.${{ github.run_number }}"
-          body: "Despliegue automático verificado desde la rama `prod`."
+          body: "Despliegue automático verificado desde la rama `Prod`."
           files: madriguera-market-prod.zip
