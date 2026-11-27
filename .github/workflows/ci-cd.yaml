@@ -64,7 +64,7 @@ jobs:
   qa-empaquetado:
     name: QA - Construir Artefacto
     needs: ci-pruebas-y-calidad
-    if: github.event_name == 'push' && github.ref == 'refs/heads/qa'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/Qa'
     runs-on: ubuntu-latest
 
     steps:
@@ -87,7 +87,7 @@ jobs:
   prod-despliegue:
     name: PROD - Publicar Release
     needs: ci-pruebas-y-calidad
-    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/Prod'
     runs-on: ubuntu-latest
 
     steps:
