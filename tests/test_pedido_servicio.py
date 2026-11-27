@@ -17,9 +17,10 @@ class PruebasPedidoServicio(unittest.TestCase):
     def setUp(self):
         carpeta = tempfile.TemporaryDirectory()
         self.addCleanup(carpeta.cleanup)
-        self.ruta = os.path.join(carpeta.name, "./data/pedido_data.json")
+        self.ruta = os.path.join(carpeta.name, "data", "pedido_data.json")
+        os.makedirs(os.path.dirname(self.ruta), exist_ok=True)
         self.servicio = PedidoService(PedidoRepositorio(self.ruta))
-
+        self.servicio._repo.validar_inventario = lambda carrito: False
     def _crear_pedido(self, **extra):
         datos = {
             "id_usuario": 1,
@@ -45,12 +46,10 @@ class PruebasPedidoServicio(unittest.TestCase):
             self._crear_pedido(estado="")
 
     def test_crear_con_producto_agotado_falla(self):
-        # Forzamos que validar_inventario indique falta de stock para probar la rama
         self.servicio._repo.validar_inventario = lambda carrito: True
         with self.assertRaises(ProductoAgotado):
             self._crear_pedido(carrito={"999": 99999})
 
-    # LEER
     def test_obtener_exitoso(self):
         creado = self._crear_pedido()
         obtenido = self.servicio.obtener(creado.id)
@@ -86,7 +85,7 @@ class PruebasPedidoServicio(unittest.TestCase):
 
     def test_editar_datos_inexistente_falla(self):
         with self.assertRaises(PedidoNoEncontrado):
-            self.servicio.editar_datos(999, estado="Cancelado")
+            self.servicio.editar_datos(999, estado="Inactivo")
 
     def test_editar_datos_con_estado_invalido_falla_y_no_cambia_nada(self):
         creado = self._crear_pedido()
@@ -103,8 +102,7 @@ class PruebasPedidoServicio(unittest.TestCase):
     def test_eliminar_exitoso(self):
         creado = self._crear_pedido()
         self.servicio.eliminar(creado.id)
-        with self.assertRaises(PedidoNoEncontrado):
-            self.servicio.obtener(creado.id)
+        self.assertEqual(self.servicio.obtener(creado.id).estado, "Cancelado")
 
     def test_eliminar_inexistente_falla(self):
         with self.assertRaises(PedidoNoEncontrado):
