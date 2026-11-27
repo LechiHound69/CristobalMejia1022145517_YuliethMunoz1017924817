@@ -2,9 +2,9 @@ name: CI/CD - Madriguera Market
 
 on:
   push:
-    branches: [dev, qa, prod]
+    branches: [Dev, Qa, Prod]
   pull_request:
-    branches: [dev, qa, prod]
+    branches: [Dev, Qa, Prod]
 
 permissions:
   contents: write  # Necesario para crear Releases automáticos en prod
