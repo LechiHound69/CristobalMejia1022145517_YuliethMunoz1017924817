@@ -9,10 +9,11 @@ from entities.excepciones import ErrorValidacion
 
 @dataclass
 class Pedido:
-    id: Optional[int] = None
     id_usuario: int
     carrito: dict
     estado: str
+    id: Optional[int] = None
+
 
     def __post_init__(self):
         if not self.estado:

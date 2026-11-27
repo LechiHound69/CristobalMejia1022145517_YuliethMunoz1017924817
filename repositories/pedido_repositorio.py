@@ -2,13 +2,11 @@
 
 from dataclasses import replace
 
-from entities.producto import Pedido
+from entities.pedido import Pedido
 from repositories.base import Repositorio
-from producto_repositorio import ProductoRepositorio
+from repositories.producto_repositorio import ProductoRepositorio
 
-
-class RepositorioPedido(Repositorio):
-
+class PedidoRepositorio(Repositorio):
     def crear(self, pedido: Pedido) -> Pedido:
         nuevo_id = max((int(clave) for clave in self._buffer), default=0) + 1
         nuevo = replace(pedido, id=nuevo_id)
