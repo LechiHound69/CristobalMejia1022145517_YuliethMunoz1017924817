@@ -52,10 +52,10 @@ class PedidoRepositorio(Repositorio):
         return True
 
     def validar_inventario(self, carrito: dict) -> bool:
-        producto_repo = ProductoRepositorio("./data/product_data.json")
-        producto_buffer = producto_repo.get_buffer()
-        return any(
-            int(datos["cantidad"]) < int(carrito["cantidad"])
-            for datos in producto_buffer[f"{id}"]
-            for id in carrito
-        )
+    producto_repo = ProductoRepositorio("./data/product_data.json")
+    producto_buffer = producto_repo.get_buffer()
+    for id_producto, cantidad in carrito.items():
+        producto = producto_buffer.get(str(id_producto))
+        if producto is None or int(producto["cantidad"]) < int(cantidad):
+            return True
+    return False    
