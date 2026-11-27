@@ -2,7 +2,7 @@ name: CI/CD - Madriguera Market
 
 on:
   push:
-    branches: [Dev, Qa, Prod]
+    branches: [Dev, Qa, Prod, "feature/**"]
   pull_request:
     branches: [Dev, Qa, Prod]
 
