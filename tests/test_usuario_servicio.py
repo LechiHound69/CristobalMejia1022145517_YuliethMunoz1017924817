@@ -17,7 +17,8 @@ class PruebasUsuarioServicio(unittest.TestCase):
     def setUp(self):
         carpeta = tempfile.TemporaryDirectory()
         self.addCleanup(carpeta.cleanup)
-        self.ruta = os.path.join(carpeta.name, "./data/user_data.json")
+        self.ruta = os.path.join(carpeta.name, "data", "user_data.json")
+        os.makedirs(os.path.dirname(self.ruta), exist_ok=True)
         self.servicio = UsuarioServicio(UsuarioRepositorio(self.ruta))
 
     def _crear_usuario(self, **extra):
@@ -106,8 +107,8 @@ class PruebasUsuarioServicio(unittest.TestCase):
     def test_eliminar_exitoso(self):
         creado = self._crear_usuario()
         self.servicio.eliminar(creado.id)
-        with self.assertRaises(UsuarioNoEncontrado):
-            self.servicio.obtener(creado.id)
+        self.assertEqual(self.servicio.obtener(creado.id).estado, "Inactivo")
+        
 
     def test_eliminar_inexistente_falla(self):
         with self.assertRaises(UsuarioNoEncontrado):

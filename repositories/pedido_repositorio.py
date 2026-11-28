@@ -2,13 +2,11 @@
 
 from dataclasses import replace
 
-from entities.producto import Pedido
+from entities.pedido import Pedido
 from repositories.base import Repositorio
-from producto_repositorio import ProductoRepositorio
+from repositories.producto_repositorio import ProductoRepositorio
 
-
-class RepositorioPedido(Repositorio):
-
+class PedidoRepositorio(Repositorio):
     def crear(self, pedido: Pedido) -> Pedido:
         nuevo_id = max((int(clave) for clave in self._buffer), default=0) + 1
         nuevo = replace(pedido, id=nuevo_id)
@@ -22,13 +20,13 @@ class RepositorioPedido(Repositorio):
             raise KeyError(f"No existe ningún registro con el ID {id}. >n<")
 
         return Pedido.from_dict(self._buffer[clave])
-
+       
     def obtener_por_usuario(self, id_usuario: int) -> list[Pedido]:
         return [
-            Pedido(**datos)
+            Pedido.from_dict(datos)
             for datos in self._buffer.values()
-            if datos["id_usuario"] == str(id_usuario)
-        ]
+            if int(datos["id_usuario"]) == int(id_usuario)
+        ]    
 
     def obtener_todos(self) -> list[Pedido]:
         return [Pedido(**datos) for datos in self._buffer.values()]
@@ -56,8 +54,8 @@ class RepositorioPedido(Repositorio):
     def validar_inventario(self, carrito: dict) -> bool:
         producto_repo = ProductoRepositorio("./data/product_data.json")
         producto_buffer = producto_repo.get_buffer()
-        return any(
-            int(datos["cantidad"]) < int(carrito["cantidad"])
-            for datos in producto_buffer[f"{id}"]
-            for id in carrito
-        )
+        for id_producto, cantidad in carrito.items():
+            producto = producto_buffer.get(str(id_producto))
+            if producto is None or int(producto["cantidad"]) < int(cantidad):
+                return True
+        return False   

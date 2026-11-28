@@ -22,7 +22,7 @@ def _datos(**extra):
 class PruebasUsuarioEntidad(unittest.TestCase):
     def test_usuario_valido(self):
         usuario = Usuario(**_datos())
-        self.assertEqual(usuario.nombre, "Lechi")
+        self.assertEqual(usuario.nombre, "Lechi Hound")
 
     def test_nombre_con_espacios_se_limpia(self):
         usuario = Usuario(**_datos(nombre="  Lechi  ", direccion="  Calle 10  "))

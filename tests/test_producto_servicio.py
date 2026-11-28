@@ -18,7 +18,8 @@ class PruebasProductoServicio(unittest.TestCase):
     def setUp(self):
         carpeta = tempfile.TemporaryDirectory()
         self.addCleanup(carpeta.cleanup)
-        self.ruta = os.path.join(carpeta.name, "./data/product_data.json")
+        self.ruta = os.path.join(carpeta.name, "data", "product_data.json")
+        os.makedirs(os.path.dirname(self.ruta), exist_ok=True)
         self.servicio = ProductoServicio(ProductoRepositorio(self.ruta))
 
     def _crear_orejas(self, **extra):

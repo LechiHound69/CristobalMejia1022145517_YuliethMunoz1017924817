@@ -8,13 +8,14 @@ from entities.excepciones import ErrorValidacion
 
 @dataclass
 class Usuario:
-    id: Optional[int] = None
     nombre: str
     email: str
     documento: str
     telefono: str
     direccion: str
     estado: str
+    id: Optional[int] = None
+
 
     def __post_init__(self):
         self.nombre = (self.nombre or "").strip()
