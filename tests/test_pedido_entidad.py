@@ -30,7 +30,7 @@ class PruebasPedidoEntidad(unittest.TestCase):
     def test_estado_muy_largo_falla(self):
         with self.assertRaises(ErrorValidacion):
             Pedido(**_datos(estado="A" * 16))
-
+            
     def test_id_usuario_cero_o_negativo_falla(self):
         with self.assertRaises(ErrorValidacion):
             Pedido(**_datos(id_usuario=0))

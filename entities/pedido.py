@@ -9,10 +9,11 @@ from entities.excepciones import ErrorValidacion
 
 @dataclass
 class Pedido:
-    id: Optional[int] = None
     id_usuario: int
     carrito: dict
     estado: str
+    id: Optional[int] = None
+
 
     def __post_init__(self):
         if not self.estado:
@@ -21,7 +22,8 @@ class Pedido:
             raise ErrorValidacion("El carrito no puede estar vacío OnO")
         if self.id_usuario is not None and self.id_usuario <= 0:
             raise ErrorValidacion("El ID de usuario debe ser un entero positivo OnO")
-
+        if len(self.estado) > 15:
+            raise ErrorValidacion("El estado no puede superar 15 caracteres")
     def editar_datos(self, carrito: Optional[dict], estado: Optional[str]) -> None:
         if not carrito:
             carrito = self.carrito
