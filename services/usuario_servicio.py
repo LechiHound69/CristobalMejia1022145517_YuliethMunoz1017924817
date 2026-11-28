@@ -41,15 +41,15 @@ class UsuarioServicio:
         return self._repo.crear(usuario)
 
     def obtener(self, id: int) -> Usuario:
-        usuario = self._repo.obtener_por_id(id)
-        if usuario is None:
+        try:
+            return self._repo.obtener_por_id(id)
+        except KeyError:
             raise UsuarioNoEncontrado(f"No existe el usuario con id {id} OnO")
-        return usuario
 
     def listar(self) -> list[Usuario]:
         return self._repo.obtener_todos()
 
-    def editar_datos(self, id: int, **cambios) -> Usuario:
+    def editar_datos(self, id: int, /, **cambios) -> Usuario:
         actual = self.obtener(id)
 
         invalidos = set(cambios) - CAMPOS_EDITABLES

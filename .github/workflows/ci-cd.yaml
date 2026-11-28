@@ -2,7 +2,7 @@ name: CI/CD - Madriguera Market
 
 on:
   push:
-    branches: [Dev, Qa, Prod]
+    branches: [Dev, Qa, Prod, "feature/**"]
   pull_request:
     branches: [Dev, Qa, Prod]
 
@@ -48,7 +48,7 @@ jobs:
       - name: Subir reporte de cobertura como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report-${{ github.ref_name }}
+          name: coverage-report-${{ github.run_number }}
           path: coverage.xml
 
       # Descomenta este bloque si conectas el repo a SonarCloud
@@ -64,7 +64,7 @@ jobs:
   qa-empaquetado:
     name: QA - Construir Artefacto
     needs: ci-pruebas-y-calidad
-    if: github.event_name == 'push' && github.ref == 'refs/heads/qa'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/Qa'
     runs-on: ubuntu-latest
 
     steps:
@@ -87,7 +87,7 @@ jobs:
   prod-despliegue:
     name: PROD - Publicar Release
     needs: ci-pruebas-y-calidad
-    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/Prod'
     runs-on: ubuntu-latest
 
     steps:
@@ -103,5 +103,5 @@ jobs:
         with:
           tag_name: v1.0.${{ github.run_number }}
           name: "Madriguera Market v1.0.${{ github.run_number }}"
-          body: "Despliegue automático verificado desde la rama `prod`."
+          body: "Despliegue automático verificado desde la rama `Prod`."
           files: madriguera-market-prod.zip

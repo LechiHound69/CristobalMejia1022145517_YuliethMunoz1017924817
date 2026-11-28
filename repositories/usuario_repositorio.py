@@ -3,12 +3,11 @@
 from dataclasses import replace
 from typing import Optional
 
-from entities.producto import Usuario
+from entities.usuario import Usuario
 from repositories.base import Repositorio
 
 
-class RepositorioUsuario(Repositorio):
-
+class UsuarioRepositorio(Repositorio):
     def crear(self, usuario: Usuario) -> Usuario:
         nuevo_id = max((int(clave) for clave in self._buffer), default=0) + 1
         nuevo = replace(usuario, id=nuevo_id)

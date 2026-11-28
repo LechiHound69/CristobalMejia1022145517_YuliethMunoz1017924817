@@ -19,16 +19,16 @@ class PedidoService:
 
         if self._repo.validar_inventario(carrito):
             raise ProductoAgotado(
-                f"Uno de los productos elegidos no tiene suficientes existencias UnU"
+                "Uno de los productos elegidos no tiene suficientes existencias UnU"
             )
 
         return self._repo.crear(pedido)
 
     def obtener(self, id: int) -> Pedido:
-        pedido = self._repo.obtener_por_id(id)
-        if pedido is None:
+        try:
+            return self._repo.obtener_por_id(id)
+        except KeyError:
             raise PedidoNoEncontrado(f"No existe el pedido con el ID {id} OnO")
-        return pedido
 
     def obtener_por_usuario(self, id_usuario: int) -> list[Pedido]:
         return self._repo.obtener_por_usuario(id_usuario)
@@ -36,22 +36,21 @@ class PedidoService:
     def listar(self) -> list[Pedido]:
         return self._repo.obtener_todos()
 
-    def editar_datos(self, id: int, **cambios) -> Pedido:
+    def editar_datos(self, id: int, /, **cambios) -> Pedido:
         actual = self.obtener(id)
 
         invalidos = set(cambios) - CAMPOS_EDITABLES
         if invalidos:
             raise ErrorValidacion(
-                "Campos no editables TwT: {', '.join(sorted(invalidos))}"
+                f"Campos no editables TwT: {', '.join(sorted(invalidos))}"
             )
-        if self._repo.validar_inventario(cambios["carrito"]):
+        if "carrito" in cambios and self._repo.validar_inventario(cambios["carrito"]):
             raise ProductoAgotado(
-                f"Uno de los productos elegidos no tiene suficientes existencias UnU"
+                "Uno de los productos elegidos no tiene suficientes existencias UnU"
             )
 
         datos = {**actual.to_dict(), **cambios}
         actualizado = Pedido.from_dict(datos)
-
         return self._repo.actualizar(actualizado)
 
     def eliminar(self, id: int) -> None:
